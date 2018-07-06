@@ -1,6 +1,7 @@
 package server
 
 import (
+	"bytes"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -10,11 +11,13 @@ import (
 
 func logRequest(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		dump, err := httputil.DumpRequestOut(r, false)
-		if err != nil {
-			log.Println(err)
+		d, e := httputil.DumpRequest(r, false)
+		if e != nil {
+			log.Println(e)
 		} else {
-			log.Printf("%q", dump)
+			o, n := []byte{'\r', '\n'}, []byte{'\r', '\n', ' ', ' '}
+			bytes.Replace(d, o, n, bytes.Count(d, o)-1)
+			log.Printf("%s", bytes.Replace(d, o, n, bytes.Count(d, o)-1))
 		}
 		next(w, r)
 	}
