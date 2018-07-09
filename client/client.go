@@ -1,16 +1,25 @@
 package client
 
 import (
-	"fmt"
+	"bytes"
 	"log"
+	"net/http"
+	"net/http/httputil"
 )
 
-func hello(serverAddress string) {
-	fmt.Println("Hello server on" + serverAddress)
-}
-
 // RunClient run client against server
-func RunClient(serverAddress string) {
+func RunClient(serverAddress string, cmd string) {
 	log.Println("Running client against " + serverAddress)
-	hello(serverAddress)
+
+	resp, err := http.Get("http://" + serverAddress + "/" + "command")
+	if err != nil {
+		log.Fatal(err)
+	}
+	dump, err := httputil.DumpResponse(resp, false)
+	if err != nil {
+		log.Fatal(err)
+	}
+	old, new := []byte{'\r', '\n'}, []byte{'\r', '\n', ' ', ' '}
+	bytes.Replace(dump, old, new, bytes.Count(dump, old)-1)
+	log.Printf("%s", bytes.Replace(dump, old, new, bytes.Count(dump, old)-1))
 }

@@ -12,6 +12,12 @@ import (
 	"github.com/frnksgr/sisi/server"
 )
 
+// Usage help
+const Usage = `
+Usage: sisi [-s]
+	-s	run server
+`
+
 func runServer(listenAddress string) {
 	srv := server.RunServer(listenAddress)
 
@@ -33,7 +39,12 @@ func runClient(serverAddress string) {
 		os.Exit(1)
 	}()
 
-	client.RunClient(serverAddress)
+	switch cmd := flag.Arg(0); cmd {
+	case "hello":
+		client.RunClient(serverAddress, cmd)
+	default:
+		log.Fatal("unknown Command\n")
+	}
 }
 
 func main() {
