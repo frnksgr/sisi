@@ -1,0 +1,9 @@
+---
+applications:
+  - name: sisi
+    command: sisi -s
+    memory: 512M
+    env:
+      GOPACKAGENAME: github.com/frnksgr/sisi
+      GOVERSION: go1.10
+

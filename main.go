@@ -12,12 +12,6 @@ import (
 	"github.com/frnksgr/sisi/server"
 )
 
-// Usage help
-const Usage = `
-Usage: sisi [-s]
-	-s	run server
-`
-
 func runServer(listenAddress string) {
 	srv := server.RunServer(listenAddress)
 
@@ -50,11 +44,15 @@ func runClient(serverAddress string) {
 func main() {
 	var serverMode bool
 	flag.BoolVar(&serverMode, "s", false,
-		"Run server if set else run client")
-
+		"Run server if set, else run client")
 	flag.Parse()
 
-	bindAddress := ":8080"
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = "8080"
+	}
+
+	bindAddress := ":" + port
 	serverAddress := os.Getenv("SISI_SERVER")
 	if serverAddress == "" {
 		serverAddress = "localhost" + bindAddress

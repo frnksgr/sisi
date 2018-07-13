@@ -3,35 +3,9 @@ package server
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
-	"strconv"
 )
-
-func byteSize(s string) int64 {
-	if len(s) > 0 {
-		var factor int64
-		switch f := s[len(s)-1]; f {
-		case 'B':
-			factor = 1
-		case 'K':
-			factor = 1024
-		case 'M':
-			factor = 1024 * 1024
-		case 'G':
-			factor = 1024 * 1024 * 1024
-		}
-		//n, err := strconv.Atoi(s[:len(s)-1])
-		n, err := strconv.ParseInt(s[:len(s)-1], 10, 64)
-		if err == nil {
-			return n * factor
-		} else {
-			log.Println(err)
-		}
-	}
-	return 0
-}
 
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Hossa!")
@@ -85,8 +59,8 @@ func RunServer(listenAddress string) *http.Server {
 	}
 
 	go func() {
-		log.Println("Running server on " + listenAddress)
-		log.Fatal(srv.ListenAndServe())
+		logger.Println("Running server on " + listenAddress)
+		logger.Fatal(srv.ListenAndServe())
 	}()
 
 	return srv
